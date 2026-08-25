@@ -1,5 +1,5 @@
 /* 꼭 (KKOK) — service worker */
-var CACHE = 'kkok-v1';
+var CACHE = 'kkok-v2';
 var ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,8 @@ var ASSETS = [
   './manifest.webmanifest',
   './icons/favicon.svg',
   './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
+  './icons/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', function (e) {
