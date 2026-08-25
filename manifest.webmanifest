@@ -1,0 +1,30 @@
+{
+  "name": "꼭 — 오늘도 꼭",
+  "short_name": "꼭",
+  "description": "할 일, 구매 목록, 언젠가, 링크를 한 곳에 담는 파스텔 캘린더 플래너",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FDFBF7",
+  "theme_color": "#FDFBF7",
+  "lang": "ko",
+  "dir": "ltr",
+  "categories": ["productivity", "lifestyle"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ],
+  "share_target": {
+    "action": "./index.html",
+    "method": "GET",
+    "params": { "title": "title", "text": "text", "url": "url" }
+  },
+  "shortcuts": [
+    { "name": "오늘 할 일", "url": "./index.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "구매할 목록", "url": "./index.html#buy" },
+    { "name": "링크 보관함", "url": "./index.html#links" }
+  ]
+}

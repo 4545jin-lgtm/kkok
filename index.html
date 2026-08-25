@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>꼭 — 오늘도 꼭</title>
+<meta name="description" content="할 일, 구매 목록, 언젠가, 링크를 한 곳에. 파스텔 캘린더 플래너 '꼭'">
+<meta name="theme-color" content="#FDFBF7">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="꼭">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="appbar">
+  <button class="icon-btn" id="btnToday" aria-label="오늘로 이동">
+    <svg viewBox="0 0 24 24" class="ic"><rect x="3" y="5" width="18" height="16" rx="4"/><path d="M3 10h18M8 3v4M16 3v4"/><circle cx="12" cy="15" r="2" fill="currentColor" stroke="none"/></svg>
+  </button>
+  <h1 class="brand" id="appTitle">꼭</h1>
+  <button class="icon-btn" id="btnSettings" aria-label="설정">
+    <svg viewBox="0 0 24 24" class="ic"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
+  </button>
+</header>
+
+<main id="main">
+
+  <!-- ===== 캘린더 ===== -->
+  <section class="view" id="view-calendar">
+    <div class="cal-head">
+      <button class="icon-btn sm" id="prevMonth" aria-label="이전 달"><svg viewBox="0 0 24 24" class="ic"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="month-label" id="monthLabel">2026년 8월</button>
+      <button class="icon-btn sm" id="nextMonth" aria-label="다음 달"><svg viewBox="0 0 24 24" class="ic"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+
+    <div class="weekdays" id="weekdays"></div>
+    <div class="grid" id="calGrid"></div>
+
+    <button class="banner" id="overdueBanner" hidden>
+      <span id="overdueText">0개의 남은 할 일</span>
+      <svg viewBox="0 0 24 24" class="ic"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+
+    <div class="day-panel">
+      <div class="day-head">
+        <h2 id="dayLabel">8월 25일 (화)</h2>
+        <div class="seg" id="daySeg">
+          <button class="seg-btn on" data-kind="todo">할 일</button>
+          <button class="seg-btn" data-kind="buy">구매</button>
+        </div>
+      </div>
+      <ul class="list" id="dayList"></ul>
+      <p class="empty" id="dayEmpty">아직 없어요. 아래에 적어보세요 ✏️</p>
+    </div>
+  </section>
+
+  <!-- ===== 언젠가 ===== -->
+  <section class="view" id="view-someday" hidden>
+    <div class="page-head">
+      <h2>언젠가</h2>
+      <p>날짜는 아직, 마음엔 담아둔 일들</p>
+    </div>
+    <ul class="list" id="somedayList"></ul>
+    <p class="empty" id="somedayEmpty">‘언젠가 해야지’ 하던 일을 여기 모아두세요 🌱</p>
+  </section>
+
+  <!-- ===== 장보기 ===== -->
+  <section class="view" id="view-buy" hidden>
+    <div class="page-head">
+      <h2>구매할 목록</h2>
+      <p>사야 할 것들을 한 곳에</p>
+    </div>
+    <ul class="list" id="buyList"></ul>
+    <p class="empty" id="buyEmpty">살 것을 적어두면 잊지 않아요 🛒</p>
+    <div class="done-fold" id="buyDoneFold" hidden>
+      <button class="fold-btn" id="buyDoneToggle">구매 완료 <span id="buyDoneCount">0</span>개 보기</button>
+      <ul class="list" id="buyDoneList" hidden></ul>
+    </div>
+  </section>
+
+  <!-- ===== 링크 ===== -->
+  <section class="view" id="view-links" hidden>
+    <div class="page-head">
+      <h2>링크 보관함</h2>
+      <p>다시 보고 싶은 글을 폴더별로</p>
+    </div>
+    <div class="chips scroll-x" id="folderChips"></div>
+    <ul class="link-list" id="linkList"></ul>
+    <p class="empty" id="linkEmpty">링크를 저장해 한 곳에서 모아보세요 🔖</p>
+  </section>
+
+</main>
+
+<!-- ===== 빠른 입력 바 ===== -->
+<div class="composer" id="composer">
+  <div class="composer-inner">
+    <textarea id="cpText" rows="1" placeholder="할 일을 입력하세요" enterkeyhint="done"></textarea>
+    <div class="cp-extra" id="cpExtra" hidden>
+      <div class="cp-memo" id="cpMemoWrap" hidden>
+        <textarea id="cpMemo" rows="2" placeholder="메모를 남겨보세요"></textarea>
+      </div>
+      <ul class="cp-checks" id="cpChecks" hidden></ul>
+    </div>
+    <div class="cp-row">
+      <button class="pill" id="cpDate"><svg viewBox="0 0 24 24" class="ic"><rect x="3" y="5" width="18" height="16" rx="4"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span id="cpDateText">8. 25. (화)</span></button>
+      <button class="pill icon-only" id="cpAlarm" aria-label="알람"><svg viewBox="0 0 24 24" class="ic"><path d="M18 8a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7"/><path d="M10.3 20a2 2 0 0 0 3.4 0"/></svg></button>
+      <button class="pill icon-only" id="cpMemoBtn" aria-label="메모"><svg viewBox="0 0 24 24" class="ic"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></button>
+      <button class="pill icon-only" id="cpCheckBtn" aria-label="체크리스트"><svg viewBox="0 0 24 24" class="ic"><path d="M4 7l2 2 3-3M4 15l2 2 3-3M13 8h7M13 16h7"/></svg></button>
+      <button class="pill cat" id="cpCat"><span class="dot" id="cpCatDot"></span><span id="cpCatText">일정</span></button>
+      <button class="send" id="cpSend" aria-label="추가"><svg viewBox="0 0 24 24" class="ic"><path d="M4 12l16-8-6 8 6 8z" fill="currentColor" stroke="none"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 하단 탭 ===== -->
+<nav class="tabbar" id="tabbar">
+  <button class="tab on" data-view="calendar"><svg viewBox="0 0 24 24" class="ic"><rect x="3" y="5" width="18" height="16" rx="4"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>캘린더</span></button>
+  <button class="tab" data-view="someday"><svg viewBox="0 0 24 24" class="ic"><path d="M12 3l2.4 5.5L20 9.2l-4 4 1 5.8-5-2.8-5 2.8 1-5.8-4-4 5.6-.7z"/></svg><span>언젠가</span></button>
+  <button class="tab" data-view="buy"><svg viewBox="0 0 24 24" class="ic"><path d="M6 7h13l-1.4 9.3a2 2 0 0 1-2 1.7H9.4a2 2 0 0 1-2-1.7L6 7z"/><path d="M6 7L5 3H3"/><circle cx="10" cy="21" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="21" r="1" fill="currentColor" stroke="none"/></svg><span>구매</span></button>
+  <button class="tab" data-view="links"><svg viewBox="0 0 24 24" class="ic"><path d="M10 13a4 4 0 0 0 5.7.4l2.6-2.6a4 4 0 0 0-5.7-5.7L11 6.7"/><path d="M14 11a4 4 0 0 0-5.7-.4L5.7 13.2a4 4 0 0 0 5.7 5.7l1.6-1.6"/></svg><span>링크</span></button>
+</nav>
+
+<!-- ===== 시트(공용) ===== -->
+<div class="scrim" id="scrim" hidden></div>
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-grab"></div>
+  <div class="sheet-body" id="sheetBody"></div>
+</div>
+
+<!-- ===== 알람 팝업 ===== -->
+<div class="alarm-pop" id="alarmPop" hidden>
+  <div class="alarm-card">
+    <div class="alarm-emoji">⏰</div>
+    <p class="alarm-time" id="alarmTime">09:00</p>
+    <h3 id="alarmTitle">할 일</h3>
+    <p class="alarm-memo" id="alarmMemo"></p>
+    <div class="alarm-btns">
+      <button class="btn ghost" id="alarmLater">10분 뒤에</button>
+      <button class="btn" id="alarmDone">확인</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>
