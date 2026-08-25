@@ -2,7 +2,7 @@
 
 > 오늘 할 일, 구매할 목록, 언젠가 할 일, 링크를 한 곳에 담는 파스텔 캘린더 플래너
 
-**▶ 바로 열기 — https://4545jin-lgtm.github.io/kkok/**
+**▶ 바로 열기 — https://kkok-zeta.vercel.app**
 
 빌드 도구 없이 동작하는 순수 정적 PWA입니다. 기록은 사용자의 기기(localStorage)에 저장되고,
 공유하고 싶은 일정만 링크로 가족·친구·연인에게 보낼 수 있습니다.
@@ -71,22 +71,26 @@ powershell -ExecutionPolicy Bypass -File serve.ps1 -Root . -Port 8123
 
 ## 배포 현황
 
-- **소스**: https://github.com/4545jin-lgtm/kkok
-- **주소**: https://4545jin-lgtm.github.io/kkok/ (GitHub Pages, HTTPS)
+| | 주소 |
+|---|---|
+| **Vercel (메인)** | https://kkok-zeta.vercel.app |
+| GitHub Pages (예비) | https://4545jin-lgtm.github.io/kkok/ |
+| 소스 | https://github.com/4545jin-lgtm/kkok |
 
-`main` 브랜치에 파일을 올리면 1분 안에 자동으로 다시 배포됩니다.
+### 내용을 고쳤을 때 다시 배포하기
 
-### Vercel 주소도 원한다면
+**GitHub Pages** 는 저장소의 `main` 브랜치에 파일을 올리면 1분 안에 자동으로 갱신됩니다.
 
-Vercel 계정에 GitHub은 이미 연결돼 있지만, Vercel 앱이 `kkok` 저장소를
-아직 볼 수 없는 상태입니다. 아래 한 번만 해주면 됩니다.
+**Vercel** 은 지금 저장소와 연결되지 않은 채(파일 업로드 방식으로) 배포돼 있어,
+고친 내용을 반영하려면 [vercel.com/new](https://vercel.com/new) 에서 폴더를 다시 올리거나,
+아래 한 번만 설정해 자동 연결로 바꾸면 됩니다.
 
 1. [github.com/settings/installations](https://github.com/settings/installations) → **Vercel** 옆 `Configure`
 2. GitHub이 본인확인을 요구하면 `Verify via email` → 메일로 온 코드 입력
 3. **Repository access** 에서 `kkok` 저장소를 선택하고 `Save`
-4. [vercel.com/new](https://vercel.com/new) → 목록에 나타난 `kkok` 옆 `Import` → 설정 그대로 `Deploy`
+4. Vercel의 `kkok` 프로젝트 → `Settings` → `Git` 에서 저장소 연결
 
-> GitHub Pages 주소만으로도 설치·공유·오프라인이 모두 동작하므로, Vercel은 선택 사항입니다.
+이후에는 GitHub에 올리기만 하면 두 주소가 함께 갱신됩니다.
 
 ## 파일 구성
 
