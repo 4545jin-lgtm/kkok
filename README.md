@@ -2,6 +2,8 @@
 
 > 오늘 할 일, 구매할 목록, 언젠가 할 일, 링크를 한 곳에 담는 파스텔 캘린더 플래너
 
+**▶ 바로 열기 — https://4545jin-lgtm.github.io/kkok/**
+
 빌드 도구 없이 동작하는 순수 정적 PWA입니다. 기록은 사용자의 기기(localStorage)에 저장되고,
 공유하고 싶은 일정만 링크로 가족·친구·연인에게 보낼 수 있습니다.
 
@@ -67,36 +69,24 @@ powershell -ExecutionPolicy Bypass -File serve.ps1 -Root . -Port 8123
 그다음 브라우저에서 `http://localhost:8123` 을 엽니다.
 (`index.html` 을 그냥 더블클릭해도 대부분 동작하지만, 설치·오프라인 기능은 서버로 열어야 확인됩니다.)
 
-## 배포 (클릭 순서 그대로)
+## 배포 현황
 
-빌드 설정이 필요 없는 정적 파일이라 GitHub에 올리고 Vercel에서 연결하기만 하면 됩니다.
-아래 순서대로 하면 5분 정도 걸립니다.
+- **소스**: https://github.com/4545jin-lgtm/kkok
+- **주소**: https://4545jin-lgtm.github.io/kkok/ (GitHub Pages, HTTPS)
 
-### 1단계 — GitHub에 올리기
+`main` 브랜치에 파일을 올리면 1분 안에 자동으로 다시 배포됩니다.
 
-1. [github.com/new](https://github.com/new) 접속 (로그인 필요)
-2. **Repository name** 에 `kkok` 입력
-3. **Public** 선택 → 아래 `Create repository` 클릭
-   *(README·.gitignore 추가 옵션은 모두 체크 해제)*
-4. 다음 화면에서 `uploading an existing file` 링크 클릭
-5. 탐색기에서 `kkok` 폴더를 **열고**, 안에 있는 파일 전체(`index.html`, `app.js`, …)와
-   `icons` 폴더를 **한꺼번에 선택해서** 업로드 칸에 끌어다 놓기
-   *(`kkok` 폴더 자체를 통째로 넣지 말고, 그 안의 내용물을 넣어야 합니다)*
-6. 아래 `Commit changes` 클릭
+### Vercel 주소도 원한다면
 
-### 2단계 — Vercel에 연결하기
+Vercel 계정에 GitHub은 이미 연결돼 있지만, Vercel 앱이 `kkok` 저장소를
+아직 볼 수 없는 상태입니다. 아래 한 번만 해주면 됩니다.
 
-1. [vercel.com/new](https://vercel.com/new) 접속 → `Continue with GitHub` 으로 로그인
-2. 목록에서 방금 만든 `kkok` 저장소 옆 `Import` 클릭
-3. 설정은 **아무것도 건드리지 않고** 바로 `Deploy`
-   *(Framework Preset이 `Other` 로 잡히면 정상입니다)*
-4. 1분쯤 뒤 `https://kkok-....vercel.app` 주소가 나옵니다
+1. [github.com/settings/installations](https://github.com/settings/installations) → **Vercel** 옆 `Configure`
+2. GitHub이 본인확인을 요구하면 `Verify via email` → 메일로 온 코드 입력
+3. **Repository access** 에서 `kkok` 저장소를 선택하고 `Save`
+4. [vercel.com/new](https://vercel.com/new) → 목록에 나타난 `kkok` 옆 `Import` → 설정 그대로 `Deploy`
 
-### 3단계 — 휴대폰에 설치
-
-그 주소를 휴대폰으로 열고, 위의 **휴대폰에 설치하기** 안내대로 홈 화면에 추가하면 끝입니다.
-
-> 이후 파일을 고쳐 GitHub에 다시 올리면 Vercel이 자동으로 다시 배포합니다.
+> GitHub Pages 주소만으로도 설치·공유·오프라인이 모두 동작하므로, Vercel은 선택 사항입니다.
 
 ## 파일 구성
 
