@@ -2,7 +2,7 @@
 
 > 오늘 할 일, 구매할 목록, 언젠가 할 일, 링크를 한 곳에 담는 파스텔 캘린더 플래너
 
-**▶ 바로 열기 — https://kkok-zeta.vercel.app**
+**▶ 바로 열기 — https://kkok-three.vercel.app**
 
 빌드 도구 없이 동작하는 순수 정적 PWA입니다. 기록은 사용자의 기기(localStorage)에 저장되고,
 공유하고 싶은 일정만 링크로 가족·친구·연인에게 보낼 수 있습니다.
@@ -73,7 +73,7 @@ powershell -ExecutionPolicy Bypass -File serve.ps1 -Root . -Port 8123
 
 | | 주소 |
 |---|---|
-| **Vercel (메인)** | https://kkok-zeta.vercel.app |
+| **Vercel (메인)** | https://kkok-three.vercel.app |
 | GitHub Pages (예비) | https://4545jin-lgtm.github.io/kkok/ |
 | 소스 | https://github.com/4545jin-lgtm/kkok |
 
