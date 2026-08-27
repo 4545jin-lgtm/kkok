@@ -1438,6 +1438,10 @@ $('btnSettings').addEventListener('click', function(){
     b.appendChild(rowBtn('⬆️  백업 파일 불러오기', restore));
     b.appendChild(rowBtn('📤  오늘 일정 공유하기', function(){ closeSheet(); shareDay(); }));
 
+    sheetSub(b, '홈 화면 위젯');
+    b.appendChild(rowBtn('📅  휴대폰 캘린더로 보내기', function(){ closeSheet(); calendarSheet(); }));
+    b.appendChild(el('p','hint','휴대폰 기본 캘린더로 일정을 넘기면, 홈 화면의 캘린더 위젯에 “꼭”에 적은 일정이 그대로 나타나요. 알람도 휴대폰이 직접 울려줘 더 정확합니다.'));
+
     if (deferredPrompt) {
       sheetSub(b, '설치');
       b.appendChild(rowBtn('📱  홈 화면에 설치하기', function(){
@@ -1465,6 +1469,160 @@ function rowBtn(label, fn) {
   r.appendChild(el('div','lb', label));
   r.addEventListener('click', fn);
   return r;
+}
+
+/* ============================================================
+   휴대폰 캘린더로 내보내기 (.ics)
+   → 기본 캘린더 앱에 담기면 홈 화면 캘린더 위젯에 그대로 보인다.
+============================================================ */
+function icsEsc(s) {
+  return String(s == null ? '' : s)
+    .replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,')
+    .replace(/\r?\n/g, '\\n');
+}
+function icsFold(line) {
+  var out = [];
+  while (line.length > 72) { out.push(line.slice(0, 72)); line = ' ' + line.slice(72); }
+  out.push(line);
+  return out.join('\r\n');
+}
+function pad2(n) { return String(n).padStart(2, '0'); }
+function icsStamp() {
+  var d = new Date();
+  return d.getUTCFullYear() + pad2(d.getUTCMonth()+1) + pad2(d.getUTCDate()) + 'T' +
+         pad2(d.getUTCHours()) + pad2(d.getUTCMinutes()) + pad2(d.getUTCSeconds()) + 'Z';
+}
+
+function buildIcs(opts) {
+  opts = opts || {};
+  var from = addDays(today(), -7);
+  var to = addDays(today(), 180);
+  var stamp = icsStamp();
+
+  var items = S.todos.filter(function(t){
+    if (!t.date || t.someday) return false;
+    if (t.date < from || t.date > to) return false;
+    if (!opts.includeDone && t.done) return false;
+    return true;
+  }).slice(0, 600);
+
+  var L = [];
+  L.push('BEGIN:VCALENDAR');
+  L.push('VERSION:2.0');
+  L.push('PRODID:-//kkok//KKOK Planner//KO');
+  L.push('CALSCALE:GREGORIAN');
+  L.push('METHOD:PUBLISH');
+  L.push('X-WR-CALNAME:꼭');
+  L.push('X-WR-TIMEZONE:Asia/Seoul');
+
+  items.forEach(function(t){
+    var c = cat(t.cat);
+    var mark = (t.kind === 'buy') ? '🛒 ' : '';
+    var title = mark + t.title + (t.done ? ' ✓' : '');
+
+    var desc = [];
+    if (t.memo) desc.push(t.memo);
+    if (t.checks && t.checks.length) {
+      desc.push((t.memo ? '\n' : '') + t.checks.map(function(x){
+        return (x.d ? '☑ ' : '☐ ') + x.t;
+      }).join('\n'));
+    }
+    desc.push((desc.length ? '\n' : '') + '— 꼭');
+
+    L.push('BEGIN:VEVENT');
+    L.push('UID:kkok-' + t.id + '@kkok.app');
+    L.push('DTSTAMP:' + stamp);
+    if (t.time) {
+      var start = t.date.replace(/-/g,'') + 'T' + t.time.replace(':','') + '00';
+      var endD = toDate(t.date);
+      var hm = t.time.split(':');
+      endD.setHours(+hm[0], +hm[1] + 30, 0, 0);
+      var end = ymd(endD).replace(/-/g,'') + 'T' + pad2(endD.getHours()) + pad2(endD.getMinutes()) + '00';
+      L.push('DTSTART:' + start);
+      L.push('DTEND:' + end);
+    } else {
+      L.push('DTSTART;VALUE=DATE:' + t.date.replace(/-/g,''));
+      L.push('DTEND;VALUE=DATE:' + addDays(t.date, 1).replace(/-/g,''));
+    }
+    L.push(icsFold('SUMMARY:' + icsEsc(title)));
+    L.push(icsFold('DESCRIPTION:' + icsEsc(desc.join('\n'))));
+    L.push(icsFold('CATEGORIES:' + icsEsc(c.name)));
+    L.push('SEQUENCE:' + Math.floor(Date.now() / 60000 % 100000));
+    L.push('STATUS:CONFIRMED');
+    if (t.alarm && t.time && !t.done) {
+      L.push('BEGIN:VALARM');
+      L.push('ACTION:DISPLAY');
+      L.push(icsFold('DESCRIPTION:' + icsEsc(t.title)));
+      L.push('TRIGGER:-PT0M');
+      L.push('END:VALARM');
+    }
+    L.push('END:VEVENT');
+  });
+
+  L.push('END:VCALENDAR');
+  return { text: L.join('\r\n') + '\r\n', count: items.length };
+}
+
+function calendarSheet() {
+  openSheet(function(b){
+    sheetTitle(b, '휴대폰 캘린더로 보내기');
+
+    var includeDone = false;
+    var built = buildIcs({ includeDone: includeDone });
+
+    var info = el('div','preview');
+    info.style.borderLeftColor = '#A9CFF0';
+    info.appendChild(el('div','p-t', '일정 ' + built.count + '개를 보낼 준비가 됐어요'));
+    info.appendChild(el('div','p-m', '오늘 기준 지난 7일 ~ 앞으로 180일치 · 알람도 함께 넘어가요'));
+    b.appendChild(info);
+
+    var r = rowEl('<span>완료한 일정도 포함</span>');
+    var sw = el('button','pill', '끔');
+    sw.addEventListener('click', function(){
+      includeDone = !includeDone;
+      sw.textContent = includeDone ? '켬' : '끔';
+      sw.classList.toggle('on', includeDone);
+      built = buildIcs({ includeDone: includeDone });
+      info.firstChild.textContent = '일정 ' + built.count + '개를 보낼 준비가 됐어요';
+    });
+    r.appendChild(sw); b.appendChild(r);
+
+    var go = bigBtn('캘린더로 보내기', null, function(){
+      var data = buildIcs({ includeDone: includeDone });
+      if (!data.count) return toast('보낼 일정이 없어요');
+      sendIcs(data.text);
+    });
+    go.style.marginTop = '14px';
+    b.appendChild(go);
+
+    b.appendChild(el('p','hint',
+      '· 아이폰: 공유 창이 뜨면 “캘린더”를 골라 “모두 추가”를 누르세요.\n' +
+      '· 갤럭시: 저장된 파일을 열어 캘린더 앱으로 가져오면 돼요.\n' +
+      '· 일정을 새로 적은 뒤 다시 보내면 최신 내용으로 갱신돼요.\n' +
+      '· 날짜 없는 “언젠가” 항목은 캘린더로 보내지 않아요.'
+    ));
+    b.lastChild.style.whiteSpace = 'pre-line';
+  });
+}
+
+function sendIcs(text) {
+  var name = 'kkok-' + today() + '.ics';
+  var file = null;
+  try { file = new File([text], name, { type: 'text/calendar' }); } catch (e) {}
+
+  if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+    navigator.share({ files: [file], title: '꼭 일정' }).then(function(){
+      toast('캘린더 앱에서 추가해주세요');
+    }).catch(function(){});
+    return;
+  }
+  var blob = new Blob([text], { type: 'text/calendar;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+  toast('내려받은 파일을 열어 캘린더에 추가하세요');
 }
 
 function backup() {

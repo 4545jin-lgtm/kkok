@@ -25,6 +25,7 @@
   "shortcuts": [
     { "name": "오늘 할 일", "url": "./index.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
     { "name": "구매할 목록", "url": "./index.html#buy" },
+    { "name": "언젠가", "url": "./index.html#someday" },
     { "name": "링크 보관함", "url": "./index.html#links" }
   ]
 }
